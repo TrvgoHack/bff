@@ -1,11 +1,13 @@
-defmodule Bff.Api.Points do
+defmodule Bff.Api.Routing do
   require Logger
+
+  @timeout 60_000
 
   # response:
   # [{"lng": 6.773769020454545, "lat": 51.22745928257576}, {"lng": 6.773769020454545, "lat": 51.22745928257576}, {"lng": 6.773769020454545, "lat": 51.22745928257576}]
 
   def get(origin, destination) do
-    case HTTPoison.get(url, [], http_options) do
+    case HTTPoison.get(real_url, [], params: %{"start" => origin, "end" => destination, "reach" => 50000}, timeout: @timeout, recv_timeout: @timeout) do
       {:ok, %{status_code: 200, body: body}} ->
         # assume { coords: [ { lat, lon } ] }
         body = :jiffy.decode(body, [:return_maps])
@@ -19,7 +21,7 @@ defmodule Bff.Api.Points do
         end)
         {:ok, coords}
       {_, response} ->
-        Logger.error("No valid response from Points API: #{inspect(response)}")
+        Logger.error("No valid response from Routing API: #{inspect(response)}")
         {:error, :invalid_response}
     end
   end
@@ -29,10 +31,6 @@ defmodule Bff.Api.Points do
   end
 
   defp real_url do
-    "http://#{System.get_env("ROUTING_PORT_5000_TCP_ADDR")}:#{System.get_env("ROUTING_PORT_5000_TCP_PORT")}/get_points_for_src_dest"
-  end
-
-  defp http_options do
-    []
+    "http://#{System.get_env("ROUTING_PORT_5000_TCP_ADDR")}:#{System.get_env("ROUTING_PORT_5000_TCP_PORT")}/intervals"
   end
 end

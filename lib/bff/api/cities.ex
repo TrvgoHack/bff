@@ -1,7 +1,7 @@
 defmodule Bff.Api.Cities do
   require Logger
 
-  @default_radius 50
+  @default_radius 10
 
   def get(coords) do
     # coord: lat, lon, radius
@@ -30,6 +30,6 @@ defmodule Bff.Api.Cities do
   end
 
   defp http_options do
-    []
+    [timeout: @timeout, recv_timeout: @timeout]
   end
 end
