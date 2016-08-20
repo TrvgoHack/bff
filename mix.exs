@@ -3,13 +3,13 @@ defmodule Bff.Mixfile do
 
   def project do
     [app: :bff,
-     version: "0.0.1",
-     elixir: "~> 1.2",
-     elixirc_paths: elixirc_paths(Mix.env),
-     compilers: [:phoenix, :gettext] ++ Mix.compilers,
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps()]
+      version: "0.0.1",
+      elixir: "~> 1.2",
+      elixirc_paths: elixirc_paths(Mix.env),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers,
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      deps: deps()]
   end
 
   # Configuration for the OTP application.
@@ -17,7 +17,7 @@ defmodule Bff.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Bff, []},
-     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext]]
+      applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :httpoison]]
   end
 
   # Specifies which paths to compile per environment.
@@ -29,8 +29,10 @@ defmodule Bff.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [{:phoenix, "~> 1.2.1"},
-     {:phoenix_pubsub, "~> 1.0"},
-     {:gettext, "~> 0.11"},
-     {:cowboy, "~> 1.0"}]
+      {:phoenix_pubsub, "~> 1.0"},
+      {:gettext, "~> 0.11"},
+      {:cowboy, "~> 1.0"},
+      {:httpoison, "~> 0.9.0"},
+      {:jiffy, "~> 0.14.7"}]
   end
 end

@@ -5,7 +5,10 @@ defmodule Bff.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", Bff do
+  scope "/", Bff do
     pipe_through :api
+
+    get "/trip", TripController, :show
+    get "/dummy/points", DummyController, :points
   end
 end
