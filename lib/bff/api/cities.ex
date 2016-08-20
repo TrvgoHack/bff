@@ -1,13 +1,11 @@
 defmodule Bff.Api.Cities do
   require Logger
 
-  @default_radius 10
-
-  def get(coords) do
+  def get(coords, radius) do
     # coord: lat, lon, radius
     coords = coords
     |> Enum.map(fn coord ->
-      Map.put(coord, "radius", @default_radius)
+      Map.put(coord, "radius", radius)
     end)
 
     query = %{
