@@ -12,10 +12,9 @@ defmodule Bff.TripController do
     coords = travel_time(coords, day)
 
     {:ok, cities} = Bff.Api.Cities.get(coords, radius)
-    city = take_city(cities)
-    Logger.info("Taking you to #{city["name"]} against your will. Standby")
+    cities = todays_cities(cities)
 
-    {:ok, trivago} = Bff.Api.Trivago.get([city])
+    {:ok, trivago} = Bff.Api.Trivago.get(cities)
     trivago = amend_wiki(trivago)
 
     json = render_trip(coords, cities, trivago)
@@ -24,11 +23,10 @@ defmodule Bff.TripController do
     resp(conn, 200, json)
   end
 
-  defp take_city(cities) do
+  defp todays_cities(cities) do
     cities
     |> List.first
     |> Access.get("cities")
-    |> List.first
   end
 
   defp render_trip(coords, cities, trivago) do

@@ -10,10 +10,10 @@ defmodule Bff.Api.Trivago do
   end
 
   def do_get(cities) do
-    Logger.debug("Querying Trivago hotels")
-
     city_names = cities
     |> Enum.map(&Access.get(&1, "name"))
+
+    Logger.debug("Querying Trivago hotels in #{city_names |> Enum.join(",")}")
 
     query = %{
       cities: city_names
@@ -38,6 +38,5 @@ defmodule Bff.Api.Trivago do
     cities
     |> Enum.map(&Access.get(&1, "name"))
     |> Enum.join("-")
-    |> IO.inspect
   end
 end
