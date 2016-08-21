@@ -59,6 +59,7 @@ defmodule Bff.TripController do
       city = List.first(cities)
       case Bff.Api.Wikipedia.get(city) do
         {:ok, wiki} ->
+          wiki = fix_image(wiki)
           Map.put(hotel, "wiki", wiki)
         _ ->
           Map.put(hotel, "wiki", %{
@@ -67,5 +68,15 @@ defmodule Bff.TripController do
           })
       end
     end)
+  end
+
+  defp fix_image(wiki) do
+    case wiki do
+      %{"summary" => summary, "image" => nil} ->
+        %{"summary" => summary, "image" => "http://images.fineartamerica.com/images-medium-large/architectural-evolution-in-an-urban-landscape-9-james-falciano.jpg"}
+      %{"summary" => summary, "image" => image} ->
+        %{"summary" => summary, "image" => image}
+      any -> any
+    end
   end
 end

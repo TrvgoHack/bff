@@ -15,7 +15,7 @@ defmodule Bff.Api.Wikipedia do
     Logger.debug("Loading city information")
     case HTTPoison.get(url, [], params: %{"name" => name, "location" => location}, timeout: @timeout, recv_timeout: @timeout) do
       {:ok, %{status_code: 200, body: body}} ->
-        result = :jiffy.decode(body, [:return_maps])
+        result = :jiffy.decode(body, [:use_nil, :return_maps])
         {:ok, result}
       {:ok, %{status_code: 500, body: body}} ->
         {:error, :not_found}
