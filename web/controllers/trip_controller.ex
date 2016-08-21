@@ -2,10 +2,11 @@ defmodule Bff.TripController do
   use Bff.Web, :controller
   require Logger
 
-  def trip(conn, %{"origin" => origin, "destination" => destination, "reach" => reach, "radius" => radius, "day" => day}) do
+  def trip(conn, %{"origin" => origin, "destination" => destination, "reach" => reach, "radius" => radius, "day" => day, "max_price" => max_price}) do
     {reach, _} = Integer.parse(reach)
     {radius, _} = Integer.parse(radius)
     {day, _} = Integer.parse(day)
+    {max_price, _} = Integer.parse(max_price)
     Logger.info("Planning day #{day} of the trip!")
 
     {:ok, coords} = Bff.Api.Routing.get(origin, destination, reach)
@@ -15,7 +16,7 @@ defmodule Bff.TripController do
     cities = todays_cities(cities)
 
     cities = Enum.take(cities, 2)
-    trivago = case Bff.Api.Trivago.get(cities) do
+    trivago = case Bff.Api.Trivago.get(cities, max_price) do
       {:ok, trivago} ->
         amend_wiki(trivago)
       {:error, :not_found} ->

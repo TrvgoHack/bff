@@ -3,17 +3,17 @@ defmodule Bff.Api.Trivago do
 
   @timeout 300_000
 
-  def get(cities, max_price \\ 50) do
+  def get(cities, max_price) do
     Bff.Cache.fetch("trivago-#{cache_key(cities)}", fn ->
-      do_get(cities)
+      do_get(cities, max_price)
     end)
   end
 
-  def do_get(cities) do
+  def do_get(cities, max_price) do
     city_names = cities
     |> Enum.map(&Access.get(&1, "name"))
 
-    Logger.debug("Querying Trivago hotels in #{city_names |> Enum.join(",")}")
+    Logger.debug("Querying Trivago hotels in #{city_names |> Enum.join(",")} for a maximum price of #{max_price}€")
 
     query = %{
       cities: city_names
