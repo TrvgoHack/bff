@@ -8,7 +8,7 @@ defmodule Bff.Router do
   scope "/", Bff do
     pipe_through :api
 
-    get "/cities", TripController, :cities
+    get "/trip", TripController, :trip
     get "/dummy/points", DummyController, :points
   end
 end

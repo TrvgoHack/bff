@@ -2,7 +2,7 @@ defmodule Bff.TripController do
   use Bff.Web, :controller
   require Logger
 
-  def cities(conn, %{"origin" => origin, "destination" => destination, "reach" => reach, "radius" => radius, "day" => day}) do
+  def trip(conn, %{"origin" => origin, "destination" => destination, "reach" => reach, "radius" => radius, "day" => day}) do
     {reach, _} = Integer.parse(reach)
     {radius, _} = Integer.parse(radius)
     {day, _} = Integer.parse(day)
@@ -21,8 +21,8 @@ defmodule Bff.TripController do
     end
     {:ok, trivago} = Bff.Api.Trivago.get([city])
 
-    json = format_result(coords, cities, wiki, trivago)
-    |> :jiffy.encode
+    json = render_trip(coords, cities, wiki, trivago)
+    |> :jiffy.encode([:use_nil])
 
     resp(conn, 200, json)
   end
@@ -34,7 +34,7 @@ defmodule Bff.TripController do
     |> List.first
   end
 
-  defp format_result(coords, cities, wiki, trivago) do
+  defp render_trip(coords, cities, wiki, trivago) do
     %{
       coords: coords,
       cities: cities,
