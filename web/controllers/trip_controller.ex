@@ -14,7 +14,8 @@ defmodule Bff.TripController do
     {:ok, cities} = Bff.Api.Cities.get(coords, radius)
     cities = todays_cities(cities)
 
-    {:ok, trivago} = Bff.Api.Trivago.get(cities)
+    city = List.first(cities)
+    {:ok, trivago} = Bff.Api.Trivago.get([city])
     trivago = amend_wiki(trivago)
 
     json = render_trip(coords, cities, trivago)

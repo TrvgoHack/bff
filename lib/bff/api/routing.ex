@@ -12,6 +12,7 @@ defmodule Bff.Api.Routing do
 
   defp do_get(origin, destination, reach) do
     Logger.debug("Calculating route")
+
     case HTTPoison.get(real_url, [], params: %{"start" => origin, "end" => destination, "reach" => reach}, timeout: @timeout, recv_timeout: @timeout) do
       {:ok, %{status_code: 200, body: body}} ->
         # assume { coords: [ { lat, lon } ] }
