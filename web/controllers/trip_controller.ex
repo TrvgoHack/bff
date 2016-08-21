@@ -62,7 +62,7 @@ defmodule Bff.TripController do
         _ ->
           Map.put(hotel, "wiki", %{
             summary: "No Wikipedia article found for #{city}",
-            image: nil
+            image: "http://images.fineartamerica.com/images-medium-large/architectural-evolution-in-an-urban-landscape-9-james-falciano.jpg"
           })
       end
     end)
