@@ -13,6 +13,7 @@ defmodule Bff.Api.Cities do
     }
     |> :jiffy.encode([:use_nil])
 
+    Logger.debug("Querying cities")
     case HTTPoison.post(url, query, [{"Content-Type", "application/json"}], http_options) do
       {:ok, %{status_code: 200, body: body}} ->
         %{"result" => result} = :jiffy.decode(body, [:return_maps])

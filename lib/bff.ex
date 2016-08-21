@@ -12,6 +12,7 @@ defmodule Bff do
       supervisor(Bff.Endpoint, []),
       # Start your own worker by calling: Bff.Worker.start_link(arg1, arg2, arg3)
       # worker(Bff.Worker, [arg1, arg2, arg3]),
+      worker(ConCache, [[], [name: :cache]])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

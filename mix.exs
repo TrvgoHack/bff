@@ -17,7 +17,7 @@ defmodule Bff.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Bff, []},
-      applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :httpoison]]
+      applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :httpoison, :con_cache]]
   end
 
   # Specifies which paths to compile per environment.
@@ -33,6 +33,7 @@ defmodule Bff.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:httpoison, "~> 0.9.0"},
-      {:jiffy, "~> 0.14.7"}]
+      {:jiffy, "~> 0.14.7"},
+      {:con_cache, "~> 0.11.1"}]
   end
 end

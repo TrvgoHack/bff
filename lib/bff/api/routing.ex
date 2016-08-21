@@ -3,11 +3,15 @@ defmodule Bff.Api.Routing do
 
   @timeout 60_000
 
-  # response:
-  # [{"lng": 6.773769020454545, "lat": 51.22745928257576}, {"lng": 6.773769020454545, "lat": 51.22745928257576}, {"lng": 6.773769020454545, "lat": 51.22745928257576}]
-
   def get(origin, destination, reach) do
     reach = reach * 1000
+    ConCache.get_or_store(:cache, "routing-#{origin}-#{destination}-#{reach}", fn ->
+      do_get(origin, destination, reach)
+    end)
+  end
+
+  defp do_get(origin, destination, reach) do
+    Logger.debug("Calculating route")
     case HTTPoison.get(real_url, [], params: %{"start" => origin, "end" => destination, "reach" => reach}, timeout: @timeout, recv_timeout: @timeout) do
       {:ok, %{status_code: 200, body: body}} ->
         # assume { coords: [ { lat, lon } ] }
