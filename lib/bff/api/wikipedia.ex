@@ -4,7 +4,7 @@ defmodule Bff.Api.Wikipedia do
   @timeout 60_000
 
   def get(%{"name" => name} = city) do
-    ConCache.get_or_store(:cache, "wikipedia-#{name}", fn ->
+    Bff.Cache.fetch("wikipedia-#{name}", fn ->
       do_get(city)
     end)
   end
@@ -17,7 +17,7 @@ defmodule Bff.Api.Wikipedia do
         result = :jiffy.decode(body, [:return_maps])
         {:ok, result}
       {:ok, %{status_code: 500, body: body}} ->
-        {:ok, :not_found}
+        {:error, :not_found}
       {_, response} ->
         Logger.error("No valid response from Wikipedia API: #{inspect(response)}")
         {:error, :invalid_response}

@@ -5,7 +5,7 @@ defmodule Bff.Api.Routing do
 
   def get(origin, destination, reach) do
     reach = reach * 1000
-    ConCache.get_or_store(:cache, "routing-#{origin}-#{destination}-#{reach}", fn ->
+    Bff.Cache.fetch("routing-#{origin}-#{destination}-#{reach}", fn ->
       do_get(origin, destination, reach)
     end)
   end

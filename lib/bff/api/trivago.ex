@@ -6,7 +6,7 @@ defmodule Bff.Api.Trivago do
   def get(cities, max_price \\ 50) do
     city = List.first(cities)
     |> Access.get("name")
-    ConCache.get_or_store(:cache, "trivago-#{city}", fn ->
+    Bff.Cache.fetch("trivago-#{city}", fn ->
       do_get(city)
     end)
   end

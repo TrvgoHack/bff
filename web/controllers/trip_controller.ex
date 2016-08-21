@@ -15,7 +15,10 @@ defmodule Bff.TripController do
     city = take_city(cities)
     Logger.info("Taking you to #{city["name"]} against your will. Standby")
 
-    {:ok, wiki} = Bff.Api.Wikipedia.get(city)
+    wiki = case Bff.Api.Wikipedia.get(city) do
+      {:ok, wiki} -> wiki
+      {:error, :not_found} -> nil
+    end
     {:ok, trivago} = Bff.Api.Trivago.get([city])
 
     json = format_result(coords, cities, wiki, trivago)
