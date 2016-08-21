@@ -19,7 +19,7 @@ defmodule Bff.TripController do
     trivago = case Bff.Api.Trivago.get(cities, max_price) do
       {:ok, trivago} ->
         amend_wiki(trivago)
-      {:error, :not_found} ->
+      {:error, _} ->
         []
     end
 

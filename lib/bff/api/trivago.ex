@@ -1,10 +1,10 @@
 defmodule Bff.Api.Trivago do
   require Logger
 
-  @timeout 300_000
+  @timeout 30_000
 
   def get(cities, max_price) do
-    Bff.Cache.fetch("trivago-#{cache_key(cities)}", fn ->
+    Bff.Cache.fetch("trivago-#{cache_key(cities)}-#{max_price}", fn ->
       do_get(cities, max_price)
     end)
   end
@@ -26,6 +26,8 @@ defmodule Bff.Api.Trivago do
         {:ok, result}
       {:ok, %{status_code: 404}} ->
         {:error, :not_found}
+      {:error, %HTTPoison.Error{reason: :timeout}} ->
+        {:error, :timeout}
       {_, response} ->
         Logger.error("No valid response from Trivago API: #{inspect(response)}")
         {:error, :invalid_response}
