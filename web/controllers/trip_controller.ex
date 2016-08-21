@@ -6,13 +6,14 @@ defmodule Bff.TripController do
     {reach, _} = Integer.parse(reach)
     {radius, _} = Integer.parse(radius)
     {day, _} = Integer.parse(day)
+    Logger.info("Planning day #{day} of the trip!")
 
     {:ok, coords} = Bff.Api.Routing.get(origin, destination, reach)
     coords = travel_time(coords, day)
 
     {:ok, cities} = Bff.Api.Cities.get(coords, radius)
     city = take_city(cities)
-    Logger.info("Planning a trip around #{city["name"]}")
+    Logger.info("Taking you to #{city["name"]} against your will. Standby")
 
     {:ok, wiki} = Bff.Api.Wikipedia.get(city)
     {:ok, trivago} = Bff.Api.Trivago.get([city])
