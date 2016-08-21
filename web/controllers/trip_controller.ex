@@ -15,8 +15,12 @@ defmodule Bff.TripController do
     cities = todays_cities(cities)
 
     cities = Enum.take(cities, 2)
-    {:ok, trivago} = Bff.Api.Trivago.get(cities)
-    trivago = amend_wiki(trivago)
+    trivago = case Bff.Api.Trivago.get(cities) do
+      {:ok, trivago} ->
+        amend_wiki(trivago)
+      {:error, :not_found} ->
+        []
+    end
 
     json = render_trip(coords, cities, trivago)
     |> :jiffy.encode([:use_nil])
