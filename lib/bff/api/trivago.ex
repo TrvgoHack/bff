@@ -1,7 +1,7 @@
 defmodule Bff.Api.Trivago do
   require Logger
 
-  @timeout 60_000
+  @timeout 300_000
 
   def get(cities, max_price \\ 50) do
     Bff.Cache.fetch("trivago-#{cache_key(cities)}", fn ->

@@ -14,8 +14,8 @@ defmodule Bff.TripController do
     {:ok, cities} = Bff.Api.Cities.get(coords, radius)
     cities = todays_cities(cities)
 
-    city = List.first(cities)
-    {:ok, trivago} = Bff.Api.Trivago.get([city])
+    cities = Enum.take(cities, 2)
+    {:ok, trivago} = Bff.Api.Trivago.get(cities)
     trivago = amend_wiki(trivago)
 
     json = render_trip(coords, cities, trivago)
@@ -52,8 +52,15 @@ defmodule Bff.TripController do
       name = hotel["city"]
       {:ok, cities} = Bff.Api.Cities.get_by_name(name)
       city = List.first(cities)
-      {:ok, wiki} = Bff.Api.Wikipedia.get(city)
-      Map.put(hotel, "wiki", wiki)
+      case Bff.Api.Wikipedia.get(city) do
+        {:ok, wiki} ->
+          Map.put(hotel, "wiki", wiki)
+        _ ->
+          Map.put(hotel, "wiki", %{
+            summary: "No Wikipedia article found for #{city}",
+            image: nil
+          })
+      end
     end)
   end
 end

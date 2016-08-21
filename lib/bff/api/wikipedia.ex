@@ -3,6 +3,7 @@ defmodule Bff.Api.Wikipedia do
 
   @timeout 60_000
 
+  def get(nil), do: nil
   def get(%{"name" => name} = city) do
     Bff.Cache.fetch("wikipedia-#{name}", fn ->
       do_get(city)
