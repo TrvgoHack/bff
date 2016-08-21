@@ -18,10 +18,7 @@ defmodule Bff.Api.Trivago do
     query = %{
       cities: city_names
     }
-    |> IO.inspect
     |> :jiffy.encode([:use_nil])
-
-    IO.puts query
 
     case HTTPoison.post(url, query, [{"Content-Type", "application/json"}], timeout: @timeout, recv_timeout: @timeout) do
       {:ok, %{status_code: 200, body: body}} ->

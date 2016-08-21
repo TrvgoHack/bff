@@ -15,13 +15,10 @@ defmodule Bff.TripController do
     city = take_city(cities)
     Logger.info("Taking you to #{city["name"]} against your will. Standby")
 
-    wiki = case Bff.Api.Wikipedia.get(city) do
-      {:ok, wiki} -> wiki
-      {:error, :not_found} -> nil
-    end
     {:ok, trivago} = Bff.Api.Trivago.get([city])
+    trivago = amend_wiki(trivago)
 
-    json = render_trip(coords, cities, wiki, trivago)
+    json = render_trip(coords, cities, trivago)
     |> :jiffy.encode([:use_nil])
 
     resp(conn, 200, json)
@@ -34,20 +31,30 @@ defmodule Bff.TripController do
     |> List.first
   end
 
-  defp render_trip(coords, cities, wiki, trivago) do
+  defp render_trip(coords, cities, trivago) do
     %{
       coords: coords,
       cities: cities,
-      wiki: wiki,
       trivago: trivago
     }
   end
 
-  def travel_time(coords, 0), do: coords
-  def travel_time(coords, day) do
+  defp travel_time(coords, 0), do: coords
+  defp travel_time(coords, day) do
     0..(day - 1)
     |> Enum.reduce(coords, fn _, coords ->
       List.delete_at(coords, 0)
+    end)
+  end
+
+  defp amend_wiki(trivago) do
+    trivago
+    |> Enum.map(fn hotel ->
+      name = hotel["city"]
+      {:ok, cities} = Bff.Api.Cities.get_by_name(name)
+      city = List.first(cities)
+      {:ok, wiki} = Bff.Api.Wikipedia.get(city)
+      Map.put(hotel, "wiki", wiki)
     end)
   end
 end
